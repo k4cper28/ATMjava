@@ -1,6 +1,8 @@
 package com.KS.main;
 
 import caom.KS.component.PanelCover;
+import caom.KS.component.PanelLoginAndRegister;
+import javafx.scene.layout.Pane;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
@@ -19,12 +21,15 @@ public class Main extends javax.swing.JFrame {
     private JPanel bg;
     private MigLayout layout;
     private PanelCover cover;
+    private PanelLoginAndRegister loginAndRegister;
     private final double addSize = 30;
     private final double coverSize = 40;
+    private final double loginSize = 60;
     private Boolean isLogin = false;
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
 
     public Main() {
+        
         setSize(930, 530);
         setTitle("ATM");
         setLocationRelativeTo(null);
@@ -39,18 +44,30 @@ public class Main extends javax.swing.JFrame {
     private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
+        loginAndRegister = new PanelLoginAndRegister();
 
         TimingTarget target = new TimingTargetAdapter() {
             @Override
             public void timingEvent(float fraction) {
                 double fractionCover;
+                double fractionLogin;
+                double size  = coverSize;
+                if(fraction <= 0.5f){
+                    size += fraction * addSize;
+                }else{
+                    size += addSize - fraction * addSize;
+                }
                 if (isLogin) {
                     fractionCover = 1f - fraction;
+                    fractionLogin = fraction;
                 } else {
                     fractionCover = fraction;
+                    fractionLogin = 1f - fraction;
                 }
                 fractionCover = Double.valueOf(df.format(fractionCover));
-                layout.setComponentConstraints(cover, "width " + coverSize + "%, pos " + fractionCover + "al 0 n 100%");
+                fractionLogin = Double.valueOf(df.format(fractionLogin));
+                layout.setComponentConstraints(cover, "width " + size + "%, pos " + fractionCover + "al 0 n 100%");
+                layout.setComponentConstraints(loginAndRegister, "width " + loginSize + "%, pos " + fractionLogin + "al 0 n 100%");
                 bg.revalidate();
             }
 
@@ -65,6 +82,7 @@ public class Main extends javax.swing.JFrame {
         animator.setDeceleration(0.5f);
         bg.setLayout(layout);
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
+        bg.add(loginAndRegister, "width " + loginSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
