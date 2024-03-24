@@ -34,6 +34,7 @@ public class Main extends javax.swing.JFrame {
         setTitle("ATM");
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon("src/img/bank.png").getImage());
+        //setUndecorated(true);
         bg = new JPanel();
         add(bg);
 
@@ -60,9 +61,22 @@ public class Main extends javax.swing.JFrame {
                 if (isLogin) {
                     fractionCover = 1f - fraction;
                     fractionLogin = fraction;
+                    if (fraction >= 0.5f) {
+                        cover.registerRight(fractionCover * 100);
+                    } else {
+                        cover.loginRight(fractionLogin * 100);
+                    }
                 } else {
                     fractionCover = fraction;
                     fractionLogin = 1f - fraction;
+                    if (fraction <= 0.5f) {
+                        cover.registerLeft(fraction * 100);
+                    } else {
+                        cover.loginLeft((1f - fraction) * 100);
+                    }
+                }
+                if(fraction>=0.5f){
+                    loginAndRegister.showRegister(isLogin);
                 }
                 fractionCover = Double.valueOf(df.format(fractionCover));
                 fractionLogin = Double.valueOf(df.format(fractionLogin));
