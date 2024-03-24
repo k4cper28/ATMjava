@@ -7,23 +7,27 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
+
 public class PanelLoginAndRegister extends javax.swing.JPanel {
 
     private JPanel panel;
     private JPanel login;
     private JPanel register;
 
-    public PanelLoginAndRegister() {
+    public PanelLoginAndRegister(ActionListener eventRegister) {
         setOpaque(false);
         setLayout(new GridBagLayout()); // Ustawienie układu na GridBagLayout dla panelu głównego
         initLogin();
-        initRegister();
+        initRegister(eventRegister);
         login.setVisible(false);
         register.setVisible(true);
     }
 
-    private void initRegister() {
-        register = new JPanel(new MigLayout("wrap", "push[center]push", "push[]40[]15[]15[]15[]15[]40[]push")); // Pusta kolumna i wiersze, aby odpowiednio rozmieścić komponenty
+
+    private void initRegister(ActionListener eventRegister) {
+        register = new JPanel(new MigLayout("wrap", "push[center]push", "push[]40[]15[]15[]15[]55[]40[]push")); // Pusta kolumna i wiersze, aby odpowiednio rozmieścić komponenty
         JLabel label = new JLabel("Create Account");
         label.setFont(new Font("sanserif", Font.BOLD, 36));
         label.setForeground(new Color(7, 164, 121));
@@ -56,6 +60,7 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         Button cmd = new Button();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250,250,250));
+        cmd.addActionListener(eventRegister);
         cmd.setText("SING UP");
         register.add(cmd,"w 60%, h 60%");
 

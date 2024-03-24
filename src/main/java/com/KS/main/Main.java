@@ -1,6 +1,7 @@
 package com.KS.main;
 
 import caom.KS.component.PanelCover;
+import caom.KS.component.PanelLoading;
 import caom.KS.component.PanelLoginAndRegister;
 import javafx.scene.layout.Pane;
 import net.miginfocom.swing.MigLayout;
@@ -21,6 +22,7 @@ public class Main extends javax.swing.JFrame {
     private JPanel bg;
     private MigLayout layout;
     private PanelCover cover;
+    private PanelLoading loading;
     private PanelLoginAndRegister loginAndRegister;
     private final double addSize = 30;
     private final double coverSize = 40;
@@ -45,7 +47,14 @@ public class Main extends javax.swing.JFrame {
     private void init() {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
-        loginAndRegister = new PanelLoginAndRegister();
+        loading = new PanelLoading();
+        ActionListener eventRegister = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                register();
+            }
+        };
+        loginAndRegister = new PanelLoginAndRegister(eventRegister);
 
         TimingTarget target = new TimingTargetAdapter() {
             @Override
@@ -95,6 +104,7 @@ public class Main extends javax.swing.JFrame {
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
         bg.setLayout(layout);
+        bg.add(loading, "pos 0 0 100% 100%");
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
         bg.add(loginAndRegister, "width " + loginSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener() {
@@ -107,6 +117,11 @@ public class Main extends javax.swing.JFrame {
         });
     }
 
+
+    private void  register(){
+        loading.setVisible(true);
+        System.out.println("click register");
+    }
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
