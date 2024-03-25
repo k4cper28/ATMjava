@@ -1,5 +1,6 @@
 package caom.KS.component;
 
+import com.KS.model.ModelLogin;
 import com.KS.model.ModleUser;
 import com.KS.swing.MyPasswordField;
 import com.KS.swing.MyTextField;
@@ -10,7 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentListener;
+
 
 public class PanelLoginAndRegister extends javax.swing.JPanel {
 
@@ -18,15 +19,20 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         return user;
     }
 
+    public ModelLogin getDataLogin() {
+        return dataLogin;
+    }
+
     private ModleUser user;
+    private ModelLogin dataLogin;
     private JPanel panel;
     private JPanel login;
     private JPanel register;
 
-    public PanelLoginAndRegister(ActionListener eventRegister) {
+    public PanelLoginAndRegister(ActionListener eventRegister,ActionListener eventLogin) {
         setOpaque(false);
         setLayout(new GridBagLayout()); // Ustawienie układu na GridBagLayout dla panelu głównego
-        initLogin();
+        initLogin(eventLogin);
         initRegister(eventRegister);
         login.setVisible(false);
         register.setVisible(true);
@@ -93,7 +99,7 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         add(register, gbc);
     }
 
-    private void initLogin(){
+    private void initLogin(ActionListener eventLogin){
         login = new JPanel(new MigLayout("wrap", "push[center]push", "push[]40[]15[]15[]15[]15[]40[]push"));
         JLabel label = new JLabel("Sing In");
         label.setFont(new Font("sanserif", Font.BOLD, 52));
@@ -115,18 +121,28 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         txtPassword.setPrefixIcon(icon);
         login.add(txtPassword, "width label:100%, wrap");
         //forgot passwd
-        JButton cmdForget = new JButton("Forgot your password?");
-        cmdForget.setForeground(new Color(100,100,100));
-        cmdForget.setFont(new Font("sansserif",1,12));
-        cmdForget.setContentAreaFilled(false);
-        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cmdForget.setBorderPainted(false);
-        login.add(cmdForget,"width label:100%, wrap");
+//        JButton cmdForget = new JButton("Forgot your password?");
+//        cmdForget.setForeground(new Color(100,100,100));
+//        cmdForget.setFont(new Font("sansserif",1,12));
+//        cmdForget.setContentAreaFilled(false);
+//        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        cmdForget.setBorderPainted(false);
+//        login.add(cmdForget,"width label:100%, wrap");
         Button cmd = new Button();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250,250,250));
+        cmd.addActionListener(eventLogin);
         cmd.setText("SING UP");
-        login.add(cmd,"w 60%, h 60%");
+        login.add(cmd,"w 60%, h 10%");
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userEmail = txtEmail.getText().trim();
+                String userPassword = String.valueOf(txtPassword.getPassword());
+                dataLogin = new ModelLogin(userEmail,userPassword);
+
+            }
+        });
 
 
         GridBagConstraints gbc = new GridBagConstraints();

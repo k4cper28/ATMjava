@@ -1,6 +1,7 @@
 package com.KS.main;
 
 import caom.KS.component.*;
+import com.KS.model.ModelLogin;
 import com.KS.model.ModleUser;
 import com.KS.service.ServiceUser;
 import net.miginfocom.swing.MigLayout;
@@ -49,6 +50,7 @@ public class Main extends JFrame {
 
 
     private void init() {
+        service = new ServiceUser();
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
@@ -59,7 +61,14 @@ public class Main extends JFrame {
                 register();
             }
         };
-        loginAndRegister = new PanelLoginAndRegister(eventRegister);
+
+        ActionListener eventLogin = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        };
+        loginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
 
         TimingTarget target = new TimingTargetAdapter() {
             @Override
@@ -128,13 +137,18 @@ public class Main extends JFrame {
     private void  register(){
         ModleUser user = loginAndRegister.getUser();
 
-        ServiceUser serviceUser = new ServiceUser();
+        // Walidacja danych użytkownika
+        if (!isValidUser(user)) {
+            showMessage(Message.MessageType.ERROR, "Invalid user data!");
+            return;
+        }
 
         try{
-            if (serviceUser.chechDuplicateUser(user.getEmail())){
-                System.out.println("juz jest");
+            if (service.checkDuplicateUser(user.getEmail())){
+                showMessage(Message.MessageType.ERROR,"The user already exists!");
             }else{
-                serviceUser.inserUser(user);
+                service.insertUser(user);
+                showMessage(Message.MessageType.SUCCESS,"You have been registered!");
             }
 
         }catch (Exception e){
@@ -142,8 +156,55 @@ public class Main extends JFrame {
         }
         //loading.setVisible(true);
         //verifyCode.setVisible(true);
-        showMessage(Message.MessageType.SUCCESS,"Test Message");
+    }
 
+//    private void login(){
+//        ModelLogin data = loginAndRegister.getDataLogin();
+//        //System.out.println("email " + data.getEmail() + " pass " + data.getPassword());
+//        ServiceUser serviceUser = new ServiceUser();
+//
+//        try{
+//            ModleUser user = serviceUser.login(data);
+//            if(user != null){
+//
+//            }else {
+//                showMessage(Message.MessageType.ERROR,"Email and password incorrect!");
+//            }
+//
+//        }catch (SQLException e){
+//            showMessage(Message.MessageType.ERROR,"Login error");
+//        }
+//    }
+
+    private void login() {
+        ModelLogin data = loginAndRegister.getDataLogin();
+        try {
+            ModleUser user = service.login(data);
+            if (user != null) {
+                this.dispose();
+                MainSystem.main(user);
+            } else {
+                showMessage(Message.MessageType.ERROR, "Email and Password incorrect");
+            }
+
+        } catch (SQLException e) {
+            showMessage(Message.MessageType.ERROR, "Error Login");
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isValidUser(ModleUser user) {
+        // Sprawdzenie poprawności danych użytkownika
+        if (user == null || user.getEmail() == null || user.getEmail().isEmpty() || !isValidEmail(user.getEmail())) {
+            return false;
+        }
+        // Tutaj można dodać inne warunki walidacji, np. sprawdzenie hasła itp.
+        return true;
+    }
+
+    private boolean isValidEmail(String email) {
+        // Prosta walidacja adresu e-mail, można zastosować bardziej zaawansowane metody
+        return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
     }
 
     private void showMessage(Message.MessageType messageType, String message) {
