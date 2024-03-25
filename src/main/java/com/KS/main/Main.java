@@ -1,34 +1,38 @@
 package com.KS.main;
 
-import caom.KS.component.PanelCover;
-import caom.KS.component.PanelLoading;
-import caom.KS.component.PanelLoginAndRegister;
-import javafx.scene.layout.Pane;
+import caom.KS.component.*;
+import com.KS.model.ModleUser;
+import com.KS.service.ServiceUser;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 
-public class Main extends javax.swing.JFrame {
+public class Main extends JFrame {
 
     private JPanel bg;
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoading loading;
+    private PanelVerifiyCode verifyCode;
     private PanelLoginAndRegister loginAndRegister;
     private final double addSize = 30;
     private final double coverSize = 40;
     private final double loginSize = 60;
     private Boolean isLogin = false;
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
+
+    private ServiceUser service;
 
     public Main() {
         
@@ -48,6 +52,7 @@ public class Main extends javax.swing.JFrame {
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();
         loading = new PanelLoading();
+        verifyCode = new PanelVerifiyCode();
         ActionListener eventRegister = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -104,7 +109,9 @@ public class Main extends javax.swing.JFrame {
         animator.setAcceleration(0.5f);
         animator.setDeceleration(0.5f);
         bg.setLayout(layout);
-        bg.add(loading, "pos 0 0 100% 100%");
+
+//        bg.add(loading, "pos 0 0 100% 100%");
+//        bg.add(verifyCode, "pos 0 0 100% 100%");
         bg.add(cover, "width " + coverSize + "%, pos 0al 0 n 100%");
         bg.add(loginAndRegister, "width " + loginSize + "%, pos 1al 0 n 100%");
         cover.addEvent(new ActionListener() {
@@ -119,12 +126,90 @@ public class Main extends javax.swing.JFrame {
 
 
     private void  register(){
-        loading.setVisible(true);
-        System.out.println("click register");
+        ModleUser user = loginAndRegister.getUser();
+
+        ServiceUser serviceUser = new ServiceUser();
+
+        try{
+            if (serviceUser.chechDuplicateUser(user.getEmail())){
+                System.out.println("juz jest");
+            }else{
+                serviceUser.inserUser(user);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        //loading.setVisible(true);
+        //verifyCode.setVisible(true);
+        showMessage(Message.MessageType.SUCCESS,"Test Message");
+
+    }
+
+    private void showMessage(Message.MessageType messageType, String message) {
+        Message ms = new Message();
+        ms.showMessage(messageType, message);
+        TimingTarget target = new TimingTargetAdapter() {
+            @Override
+            public void begin() {
+                if (!ms.isShow()) {
+                    bg.add(ms, "pos 0.5al -30", 0); //  Insert to bg fist index 0
+                    ms.setVisible(true);
+                    bg.repaint();
+                }
+            }
+
+            @Override
+            public void timingEvent(float fraction) {
+                float f;
+                if (ms.isShow()) {
+                    f = 40 * (1f - fraction);
+                } else {
+                    f = 40 * fraction;
+                }
+                layout.setComponentConstraints(ms, "pos 0.5al " + (int) (f - 30));
+                bg.repaint();
+                bg.revalidate();
+            }
+
+            @Override
+            public void end() {
+                if (ms.isShow()) {
+                    bg.remove(ms);
+                    bg.repaint();
+                    bg.revalidate();
+                } else {
+                    ms.setShow(true);
+                }
+            }
+        };
+        Animator animator = new Animator(300, target);
+        animator.setResolution(0);
+        animator.setAcceleration(0.5f);
+        animator.setDeceleration(0.5f);
+        animator.start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    animator.start();
+                } catch (InterruptedException e) {
+                    System.err.println(e);
+                }
+            }
+        }).start();
     }
 
     public static void main(String[] args) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
+
+        try {
+            Connector.getInstance().connectTODatavase();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 new Main().setVisible(true);

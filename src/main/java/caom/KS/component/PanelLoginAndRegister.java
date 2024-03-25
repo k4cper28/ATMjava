@@ -1,5 +1,6 @@
 package caom.KS.component;
 
+import com.KS.model.ModleUser;
 import com.KS.swing.MyPasswordField;
 import com.KS.swing.MyTextField;
 import com.KS.swing.Button;
@@ -7,11 +8,17 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentListener;
 
 public class PanelLoginAndRegister extends javax.swing.JPanel {
 
+    public ModleUser getUser() {
+        return user;
+    }
+
+    private ModleUser user;
     private JPanel panel;
     private JPanel login;
     private JPanel register;
@@ -63,6 +70,17 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         cmd.addActionListener(eventRegister);
         cmd.setText("SING UP");
         register.add(cmd,"w 60%, h 60%");
+        cmd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String userName = txtUser.getText().trim();
+                String userLastname = txtLastName.getText().trim();
+                String userEmail = txtEmail.getText().trim();
+                String userPassword = String.valueOf(txtPassword.getPassword());
+                user = new ModleUser(0,userName,userLastname,userEmail,userPassword);
+
+            }
+        });
 
 
         // Dodaj panel register do panelu głównego z użyciem GridBagConstraints
