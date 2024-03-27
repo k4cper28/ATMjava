@@ -41,8 +41,8 @@ public class Main extends JFrame {
         setTitle("ATM");
         setLocationRelativeTo(null);
         setIconImage(new ImageIcon("src/img/bank.png").getImage());
-        //setUndecorated(true);
         bg = new JPanel();
+        setResizable(false);
         add(bg);
 
         init();
@@ -154,27 +154,7 @@ public class Main extends JFrame {
         }catch (Exception e){
             e.printStackTrace();
         }
-        //loading.setVisible(true);
-        //verifyCode.setVisible(true);
     }
-
-//    private void login(){
-//        ModelLogin data = loginAndRegister.getDataLogin();
-//        //System.out.println("email " + data.getEmail() + " pass " + data.getPassword());
-//        ServiceUser serviceUser = new ServiceUser();
-//
-//        try{
-//            ModleUser user = serviceUser.login(data);
-//            if(user != null){
-//
-//            }else {
-//                showMessage(Message.MessageType.ERROR,"Email and password incorrect!");
-//            }
-//
-//        }catch (SQLException e){
-//            showMessage(Message.MessageType.ERROR,"Login error");
-//        }
-//    }
 
     private void login() {
         ModelLogin data = loginAndRegister.getDataLogin();
@@ -273,7 +253,7 @@ public class Main extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Main().setVisible(true);
+                new MainSystem(new ModleUser(1,"ee","ee","33","ee")).setVisible(true);
             }
         });
     }
