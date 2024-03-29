@@ -6,11 +6,15 @@ import com.KS.swing.MyPasswordField;
 import com.KS.swing.MyTextField;
 import com.KS.swing.Button;
 import net.miginfocom.swing.MigLayout;
+import org.jdesktop.animation.timing.Animator;
+import org.jdesktop.animation.timing.TimingTarget;
+import org.jdesktop.animation.timing.TimingTargetAdapter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 
 public class PanelLoginAndRegister extends javax.swing.JPanel {
@@ -22,6 +26,8 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
     public ModelLogin getDataLogin() {
         return dataLogin;
     }
+
+
 
     private ModleUser user;
     private ModelLogin dataLogin;
@@ -40,7 +46,7 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
 
 
     private void initRegister(ActionListener eventRegister) {
-        register = new JPanel(new MigLayout("wrap", "push[center]push", "push[]40[]15[]15[]15[]55[]40[]push")); // Pusta kolumna i wiersze, aby odpowiednio rozmieścić komponenty
+        register = new JPanel(new MigLayout("wrap", "push[center]push", "push[]40[]15[]15[]15[]15[]55[]40[]push")); // Pusta kolumna i wiersze, aby odpowiednio rozmieścić komponenty
         JLabel label = new JLabel("Create Account");
         label.setFont(new Font("sanserif", Font.BOLD, 36));
         label.setForeground(new Color(7, 164, 121));
@@ -70,6 +76,12 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         icon = new ImageIcon("src\\main\\java\\com\\KS\\img\\key.png");
         txtPassword.setPrefixIcon(icon);
         register.add(txtPassword, "width label:100%, wrap");
+        //pin
+        MyTextField txtPin = new MyTextField();
+        icon = new ImageIcon("src\\main\\java\\com\\KS\\img\\key.png");
+        txtPin.setPrefixIcon(icon);
+        txtPin.setHint("Pin");
+        register.add(txtPin, "width label:100%, wrap");
         Button cmd = new Button();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250,250,250));
@@ -83,8 +95,26 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
                 String userLastname = txtLastName.getText().trim();
                 String userEmail = txtEmail.getText().trim();
                 String userPassword = String.valueOf(txtPassword.getPassword());
-                user = new ModleUser(0,userName,userLastname,userEmail,userPassword);
+                String pinInput = txtPin.getText();
+                if (pinInput.matches("\\d+")) {
+                    int userPin = Integer.parseInt(pinInput);
 
+
+                    String accountNumber;
+
+                    Random random = new Random();
+
+                    StringBuilder randomNum = new StringBuilder();
+
+                    // Generuj 26 losowych cyfr i dodawaj je do ciągu znaków
+                    for (int i = 0; i < 26; i++) {
+                        int digit = random.nextInt(10); // Losowa cyfra od 0 do 9
+                        randomNum.append(digit);
+                    }
+                    accountNumber = randomNum.toString();
+
+                    user = new ModleUser(0,userName,userLastname,userEmail,userPassword, userPin, 0.0, accountNumber);
+                }
             }
         });
 
@@ -120,14 +150,6 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
         icon = new ImageIcon("src\\main\\java\\com\\KS\\img\\key.png");
         txtPassword.setPrefixIcon(icon);
         login.add(txtPassword, "width label:100%, wrap");
-        //forgot passwd
-//        JButton cmdForget = new JButton("Forgot your password?");
-//        cmdForget.setForeground(new Color(100,100,100));
-//        cmdForget.setFont(new Font("sansserif",1,12));
-//        cmdForget.setContentAreaFilled(false);
-//        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        cmdForget.setBorderPainted(false);
-//        login.add(cmdForget,"width label:100%, wrap");
         Button cmd = new Button();
         cmd.setBackground(new Color(7, 164, 121));
         cmd.setForeground(new Color(250,250,250));

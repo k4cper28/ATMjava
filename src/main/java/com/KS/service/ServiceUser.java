@@ -21,7 +21,7 @@ public class ServiceUser {
 
         ModleUser data = null;
 
-        PreparedStatement p = con.prepareStatement("select idusers, `name`,`lastname`,email  from `users` where binary(email)=? and binary(`password`)=? limit 1",ResultSet.TYPE_SCROLL_INSENSITIVE,
+        PreparedStatement p = con.prepareStatement("select idusers, `name`,`lastname`,email, pin, balance , accountnumber  from `users` where binary(email)=? and binary(`password`)=? limit 1",ResultSet.TYPE_SCROLL_INSENSITIVE,
                 ResultSet.CONCUR_READ_ONLY
         );
         p.setString(1,login.getEmail());
@@ -33,7 +33,10 @@ public class ServiceUser {
             String name = r.getString(2);
             String lastname = r.getString(3);
             String email = r.getString(4);
-            data = new ModleUser(userId,name,lastname,email,"");
+            int pin = r.getInt(5);
+            double balance = r.getDouble(6);
+            String accountBalance = r.getString(7);
+            data = new ModleUser(userId,name,lastname,email,"",pin,balance,accountBalance);
         }
         r.close();
         p.close();
@@ -41,11 +44,14 @@ public class ServiceUser {
     }
 
     public void insertUser(ModleUser user) throws SQLException {
-        PreparedStatement p = con.prepareStatement("insert into `users` (name, lastname, email , `password`) values (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement p = con.prepareStatement("insert into `users` (name, lastname, email , `password`, pin, balance, accountnumber) values (?,?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         p.setString(1, user.getName());
         p.setString(2, user.getLastname());
         p.setString(3, user.getEmail());
         p.setString(4, user.getPassword());
+        p.setInt(5, user.getPin());
+        p.setDouble(6, user.getBalance());
+        p.setString(7, user.getAccountNumber());
         p.execute();
         ResultSet r = p.getGeneratedKeys();
         r.first();
@@ -66,6 +72,17 @@ public class ServiceUser {
         r.close();
         p.close();
         return duplicate;
+    }
+
+    public void updateBalance(ModleUser user) throws SQLException{
+        PreparedStatement p = con.prepareStatement("UPDATE `atm_db`.`users` SET`balance` = ? WHERE `idusers` = ?");
+        p.setDouble(1,user.getBalance());
+        p.setInt(2,user.getUserId());
+        p.execute();
+        p.close();
+    }
+    public void withdrawMoney(ModleUser user) throws SQLException{
+
     }
 
 }

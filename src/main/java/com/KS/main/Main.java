@@ -253,9 +253,16 @@ public class Main extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainSystem(new ModleUser(1,"ee","ee","33","ee")).setVisible(true);
+                new MainSystem(new ModleUser(1,"ee","ee","33","ee",1234,10000.0,"79883960747512431675179626")).setVisible(true);
             }
         });
+
+//        @Override
+//        public void run() {
+//            new Main().setVisible(true);
+//        }
+//    });
+
     }
 
 }

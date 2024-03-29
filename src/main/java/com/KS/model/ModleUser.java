@@ -7,6 +7,9 @@ public class ModleUser {
     private String lastname;
     private String email;
     private String password;
+    private int pin;
+    private double balance;
+    private String accountNumber;
 
     public ModleUser(int userId, String name, String lastname, String email, String password) {
         this.userId = userId;
@@ -16,8 +19,43 @@ public class ModleUser {
         this.password = password;
     }
 
+    public ModleUser(int userId, String name, String lastname, String email, String password, int pin, double balance, String accountNumber) {
+        this.userId = userId;
+        this.name = name;
+        this.lastname = lastname;
+        this.email = email;
+        this.password = password;
+        this.pin = pin;
+        this.balance = balance;
+        this.accountNumber = accountNumber;
+    }
+
     public ModleUser(){
         
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public void setPin(int pin) {
+        this.pin = pin;
+    }
+
+    public int getPin() {
+        return pin;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     public void setUserId(int userId) {
