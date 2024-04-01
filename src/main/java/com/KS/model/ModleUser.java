@@ -1,5 +1,7 @@
 package com.KS.model;
 
+import java.math.BigDecimal;
+
 public class ModleUser {
 
     private int userId;
@@ -8,18 +10,10 @@ public class ModleUser {
     private String email;
     private String password;
     private int pin;
-    private double balance;
+    private BigDecimal balance;
     private String accountNumber;
 
-    public ModleUser(int userId, String name, String lastname, String email, String password) {
-        this.userId = userId;
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.password = password;
-    }
-
-    public ModleUser(int userId, String name, String lastname, String email, String password, int pin, double balance, String accountNumber) {
+    public ModleUser(int userId, String name, String lastname, String email, String password, int pin, BigDecimal balance, String accountNumber) {
         this.userId = userId;
         this.name = name;
         this.lastname = lastname;
@@ -34,7 +28,7 @@ public class ModleUser {
         
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
@@ -50,7 +44,7 @@ public class ModleUser {
         return pin;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 

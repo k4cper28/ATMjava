@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.util.Random;
 
 
@@ -113,7 +114,7 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
                     }
                     accountNumber = randomNum.toString();
 
-                    user = new ModleUser(0,userName,userLastname,userEmail,userPassword, userPin, 0.0, accountNumber);
+                    user = new ModleUser(0,userName,userLastname,userEmail,userPassword, userPin, new BigDecimal("0.0"), accountNumber);
                 }
             }
         });

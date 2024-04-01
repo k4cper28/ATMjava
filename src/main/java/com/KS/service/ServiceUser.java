@@ -6,6 +6,7 @@ import com.KS.model.ModelLogin;
 import com.KS.model.ModleUser;
 import com.sun.org.apache.xpath.internal.operations.Mod;
 
+import java.math.BigDecimal;
 import java.sql.*;
 
 public class ServiceUser {
@@ -34,7 +35,7 @@ public class ServiceUser {
             String lastname = r.getString(3);
             String email = r.getString(4);
             int pin = r.getInt(5);
-            double balance = r.getDouble(6);
+            BigDecimal balance = r.getBigDecimal(6);
             String accountBalance = r.getString(7);
             data = new ModleUser(userId,name,lastname,email,"",pin,balance,accountBalance);
         }
@@ -50,7 +51,7 @@ public class ServiceUser {
         p.setString(3, user.getEmail());
         p.setString(4, user.getPassword());
         p.setInt(5, user.getPin());
-        p.setDouble(6, user.getBalance());
+        p.setBigDecimal(6, user.getBalance());
         p.setString(7, user.getAccountNumber());
         p.execute();
         ResultSet r = p.getGeneratedKeys();
@@ -76,10 +77,28 @@ public class ServiceUser {
 
     public void updateBalance(ModleUser user) throws SQLException{
         PreparedStatement p = con.prepareStatement("UPDATE `atm_db`.`users` SET`balance` = ? WHERE `idusers` = ?");
-        p.setDouble(1,user.getBalance());
+        p.setBigDecimal(1,user.getBalance());
         p.setInt(2,user.getUserId());
         p.execute();
         p.close();
+    }
+
+    public double getBalance(ModleUser user) throws SQLException{
+        double balance = 0;
+        PreparedStatement p = con.prepareStatement("SELECT `balance` FROM `atm_db`.`users` where binary(idusers) = ? limit 1"
+                ,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        p.setInt(1,user.getUserId());
+        ResultSet r = p.executeQuery();
+
+        if(r.first()){
+            balance = r.getDouble(1);
+        }
+
+        r.close();
+        p.close();
+
+        return balance;
+
     }
     public void withdrawMoney(ModleUser user) throws SQLException{
 
