@@ -2,6 +2,7 @@ package com.KS.main;
 
 import com.KS.model.ModleUser;
 import com.KS.service.ServiceUser;
+import com.KS.swing.MyPasswordField;
 import com.KS.swing.MyTextField;
 import net.miginfocom.swing.MigLayout;
 
@@ -112,6 +113,20 @@ public class MainSystem extends JFrame {
         });
         cmd4.setText("Change Ping");
         mainPanel.add(cmd4, "w 40%, h 10%, wrap");
+
+        com.KS.swing.Button cmd5 = new com.KS.swing.Button();
+        cmd5.setBackground(new Color(7, 164, 121));
+        cmd5.setForeground(new Color(250, 250, 250));
+        cmd5.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                user = new ModleUser();
+                dispose();
+                new Main().setVisible(true);
+            }
+        });
+        cmd5.setText("Logout");
+        mainPanel.add(cmd5, "span 2, w 40%, h 10%, wrap");
 
         return mainPanel;
     }
@@ -278,14 +293,14 @@ public class MainSystem extends JFrame {
         changePinPanel.add(label, "span 2 , align center, wrap");
 
 
-        MyTextField txtoldPin = new MyTextField();
+        MyPasswordField txtoldPin = new MyPasswordField();
         ImageIcon icon = new ImageIcon("src\\main\\java\\com\\KS\\img\\key.png");
         txtoldPin.setPrefixIcon(icon);
         txtoldPin.setHint("Old Pin");
         changePinPanel.add(txtoldPin, "width label:30%, wrap, span 2");
 
 
-        MyTextField txtNewPin = new MyTextField();
+        MyPasswordField txtNewPin = new MyPasswordField();
         icon = new ImageIcon("src\\main\\java\\com\\KS\\img\\key.png");
         txtNewPin.setPrefixIcon(icon);
         txtNewPin.setHint("New Pin");
@@ -301,7 +316,8 @@ public class MainSystem extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    changePin(txtoldPin.getText().trim(),txtNewPin.getText().trim(), changePinPanel);
+
+                    changePin(String.valueOf(txtoldPin.getPassword()),String.valueOf(txtNewPin.getPassword()), changePinPanel);
                 } catch (SQLException ex) {
                     throw new RuntimeException(ex);
                 }

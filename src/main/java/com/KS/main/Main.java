@@ -184,8 +184,10 @@ public class Main extends JFrame {
     }
 
     private boolean isValidEmail(String email) {
+
         // Prosta walidacja adresu e-mail, można zastosować bardziej zaawansowane metody
         return email.matches("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
+
     }
 
     private void showMessage(Message.MessageType messageType, String message) {
@@ -252,11 +254,6 @@ public class Main extends JFrame {
         }
 
         EventQueue.invokeLater(new Runnable() {
-//            @Override
-//            public void run() {
-//                new MainSystem(new ModleUser(1,"ee","ee","33","ee",1234,new BigDecimal(10000.54),"79883960747512431675179626")).setVisible(true);
-//            }
-//        });
 
         @Override
         public void run() {

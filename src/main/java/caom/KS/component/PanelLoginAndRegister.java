@@ -163,7 +163,6 @@ public class PanelLoginAndRegister extends javax.swing.JPanel {
                 String userEmail = txtEmail.getText().trim();
                 String userPassword = String.valueOf(txtPassword.getPassword());
                 dataLogin = new ModelLogin(userEmail,userPassword);
-
             }
         });
 
