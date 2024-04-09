@@ -100,7 +100,35 @@ public class ServiceUser {
         return balance;
 
     }
-    public void withdrawMoney(ModleUser user) throws SQLException{
+
+    public String checkPin(ModleUser user) throws SQLException{
+
+        String pin = "-1";
+
+        PreparedStatement p = con.prepareStatement("SELECT `pin` FROM `atm_db`.`users` where binary(idusers) = ? limit 1"
+                ,ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+
+        p.setInt(1,user.getUserId());
+        ResultSet r = p.executeQuery();
+
+        if(r.first()){
+            pin = r.getString(1);
+        }
+
+        r.close();
+        p.close();
+
+        return pin;
+    }
+
+    public void changePin(ModleUser user, int newPin) throws SQLException{
+
+        PreparedStatement p = con.prepareStatement("UPDATE `atm_db`.`users` SET `pin` = ? WHERE `idusers` = ?");
+
+        p.setInt(1,newPin);
+        p.setInt(2,user.getUserId());
+        p.execute();
+        p.close();
 
     }
 

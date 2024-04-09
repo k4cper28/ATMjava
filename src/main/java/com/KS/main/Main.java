@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -253,7 +254,7 @@ public class Main extends JFrame {
         EventQueue.invokeLater(new Runnable() {
 //            @Override
 //            public void run() {
-//                new MainSystem(new ModleUser(1,"ee","ee","33","ee",1234,10000.0,"79883960747512431675179626")).setVisible(true);
+//                new MainSystem(new ModleUser(1,"ee","ee","33","ee",1234,new BigDecimal(10000.54),"79883960747512431675179626")).setVisible(true);
 //            }
 //        });
 
